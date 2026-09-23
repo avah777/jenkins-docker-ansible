@@ -132,6 +132,7 @@ pipeline {
                             -m ping \
                             --private-key "$SSH_KEY" \
                             -u "$SSH_USER"
+			    -e 'ansible_ssh_common_args=-o StrictHostKeyChecking=no'
 
                         echo "===== DEPLOYING APPLICATION ====="
 
@@ -141,6 +142,7 @@ pipeline {
                             ${ANSIBLE_DIR}/deploy.yml \
                             --private-key "$SSH_KEY" \
                             -u "$SSH_USER"
+		      	    -e 'ansible_ssh_common_args=-o StrictHostKeyChecking=no'
                     '''
                 }
             }

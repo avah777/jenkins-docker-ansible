@@ -1,0 +1,7 @@
+*.log
+.idea/
+.vscode/
+*.iml
+.env
+*.pem
+*.key

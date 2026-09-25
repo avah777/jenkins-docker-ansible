@@ -164,7 +164,7 @@ pipeline {
                         ssh \
                             -i "$SSH_KEY" \
                             -o StrictHostKeyChecking=no \
-                            "$SSH_USER@$(awk '/ansible_host=/{print $2}' ansible/inventory.ini | cut -d= -f2)" \
+                            "$SSH_USER@$35.175.216.138" \
                             "docker ps"
                     '''
                 }

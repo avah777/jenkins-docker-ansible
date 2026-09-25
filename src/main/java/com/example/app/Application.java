@@ -11,7 +11,7 @@ public class Application {
 
     @GetMapping("/")
     public String home() {
-        return "Hello from Jenkins + Docker + Ansible + AWS!";
+        return "Version 2 deployed automatically by Jenkins using webhook!";
     }
 
     @GetMapping("/health")

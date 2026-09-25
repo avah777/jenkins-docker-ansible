@@ -148,15 +148,15 @@ pipeline {
         }
 
         stage('Verify Deployment') {
-            steps {
+             steps {
 
                 withCredentials([
                     sshUserPrivateKey(
                         credentialsId: 'ansible-ssh-key',
                         keyFileVariable: 'SSH_KEY',
                         usernameVariable: 'SSH_USER'
-                    )
-                ]) {
+            )
+        ]) {
 
                     sh '''
                         echo "===== VERIFY APPLICATION SERVER ====="

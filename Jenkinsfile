@@ -125,6 +125,7 @@ pipeline {
                         ansible --version
 
                         echo "===== TEST ANSIBLE CONNECTION ====="
+			export ANSIBLE_HOST_KEY_CHECKING=False
 
                         ansible \
                             -i ${ANSIBLE_DIR}/inventory.ini \

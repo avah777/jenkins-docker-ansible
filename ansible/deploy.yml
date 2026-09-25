@@ -17,18 +17,6 @@
         name: docker.io
         state: present
         update_cache: true
-  
-    - name: Install Python pip
-      apt:
-        name: python3-pip
-        state: present
-        update_cache: true
-
-    - name: Upgrade Docker Python SDK
-      ansible.builtin.pip:
-        name: "docker>=7.1.0"
-        state: present
-        extra_args: --break-system-packages
 
     - name: Ensure Docker service is running
       service:
@@ -37,24 +25,31 @@
         enabled: true
 
     - name: Pull application image
-      community.docker.docker_image:
-        name: "{{ docker_image }}"
-        tag: "{{ image_tag }}"
-        source: pull
+      command:
+        cmd: "docker pull {{ docker_image }}:{{ image_tag }}"
 
     - name: Stop existing application container
-      community.docker.docker_container:
-        name: "{{ container_name }}"
-        state: absent
+      command:
+        cmd: "docker stop {{ container_name }}"
+      register: stop_container
+      failed_when: false
+      changed_when: stop_container.rc == 0
+
+    - name: Remove existing application container
+      command:
+        cmd: "docker rm {{ container_name }}"
+      register: remove_container
+      failed_when: false
+      changed_when: remove_container.rc == 0
 
     - name: Start application container
-      community.docker.docker_container:
-        name: "{{ container_name }}"
-        image: "{{ docker_image }}:{{ image_tag }}"
-        state: started
-        restart_policy: unless-stopped
-        published_ports:
-          - "{{ host_port }}:{{ container_port }}"
+      command:
+        cmd: >
+          docker run -d
+          --name {{ container_name }}
+          --restart unless-stopped
+          -p {{ host_port }}:{{ container_port }}
+          {{ docker_image }}:{{ image_tag }}
 
     - name: Wait for application
       wait_for:
@@ -63,11 +58,12 @@
         delay: 5
         timeout: 60
 
-    - name: Display running containers
-      command: docker ps
+    - name: Check running containers
+      command:
+        cmd: docker ps
       register: docker_ps
       changed_when: false
 
-    - name: Show Docker containers
+    - name: Show running containers
       debug:
         var: docker_ps.stdout

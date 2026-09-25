@@ -164,7 +164,7 @@ pipeline {
                         ssh \
                             -i "$SSH_KEY" \
                             -o StrictHostKeyChecking=no \
-                            "$SSH_USER@$35.175.216.138" \
+                            "$SSH_USER@35.175.216.138" \
                             "docker ps"
                     '''
                 }
